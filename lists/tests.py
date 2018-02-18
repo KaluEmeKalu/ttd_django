@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from lists.views import home_page
 from lists.models import Item
 
+
 class HomePageTest(TestCase):
 
     def test_home_page_returns_correct_html(self):
@@ -33,21 +34,13 @@ class HomePageTest(TestCase):
             'item_text': 'A new list item'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/the-only-list-in-the-world/')
  
 
     def test_only_saves_items_when_necessary(self):
         self.client.get('/')
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_displays_all_list_items(self):
-        Item.objects.create(text="itemey 1")
-        Item.objects.create(text="itemey 2")
-
-        response = self.client.get('/')
-
-        self.assertIn("itemey 1", response.content.decode())
-        self.assertIn("itemey 2", response.content.decode())
 
 class ItemModelTest(TestCase):
 
@@ -69,5 +62,19 @@ class ItemModelTest(TestCase):
         self.assertEqual(second_saved_item.text, 'Item the second')
 
 
+class ListViewTest(TestCase):
 
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(response, 'lists/list.html')
+
+
+    def test_displays_all_items(self):
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
 

@@ -16,6 +16,7 @@ class NewVisitorTest(LiveServerTestCase):
 
 	def wait_for_row_in_list_table(self, row_text):
 		start_time = time.time()
+		MAX_WAIT = 10
 		while True:
 			try:
 				table = self.browser.find_element_by_id('id_list_table')
@@ -92,17 +93,17 @@ class NewVisitorTest(LiveServerTestCase):
 		## We use a new browser session to make sure that no information
 		## of Edith's is coming through from cookies etc
 		self.browser.quit()
-		self.browser = wwebdriver.Firefox()
+		self.browser = webdriver.Firefox()
 
 		# Francis visits the home page. There is no sign of Edith's 
 		# list
 		self.browser.get(self.live_server_url)
-		page_text = self.browser.find_element_by_id('body').text
-		self.assertNonIn("Buy peacock feathers", page_text)
-		self.assertNonIn("make a fly", page_text)
+		page_text = self.browser.find_element_by_tag_name('body').text
+		self.assertNotIn("Buy peacock feathers", page_text)
+		self.assertNotIn("make a fly", page_text)
 
 		# Francis starts a new list by entering a new item.
-		input = self.browser.find_element_by_id("id_new_item")
+		inputbox = self.browser.find_element_by_id("id_new_item")
 		inputbox.send_keys("Buy milk")
 		inputbox.send_keys(Keys.ENTER)
 		self.wait_for_row_in_list_table("1: Buy milk")
