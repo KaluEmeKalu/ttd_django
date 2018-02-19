@@ -15,3 +15,13 @@ def new_list(request):
 	text = request.POST['item_text']
 	Item.objects.create(text=text, list=list_)
 	return redirect(f'/lists/{list_.id}/')
+
+
+def add_item(request, list_id):
+	list_ = List.objects.get(id=list_id)
+	text=request.POST['item_text']
+	Item.objects.create(
+		text=text,
+		list=list_
+	)
+	return redirect(f'/lists/{list_id}/')
