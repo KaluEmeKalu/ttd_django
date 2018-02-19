@@ -5,12 +5,14 @@ from lists.models import Item, List
 def home_page(request):
 	return render(request, 'lists/home.html')
 
-def view_list(request):
-	items = Item.objects.all()
-	return render(request, 'lists/list.html', {'items': items})
+def view_list(request, list_id):
+	list_ = List.objects.get(id=list_id)
+	items = Item.objects.filter(list=list_)
+	context = {'items': items}
+	return render(request, 'lists/list.html', context)
 
 def new_list(request):
 	list_ = List.objects.create()
 	text = request.POST['item_text']
 	Item.objects.create(text=text, list=list_)
-	return redirect('lists:view_list')
+	return redirect(f'/lists/{list_.id}/')
