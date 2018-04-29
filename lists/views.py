@@ -24,4 +24,4 @@ def add_item(request, list_id):
 		text=text,
 		list=list_
 	)
-	return redirect(f'/lists/{list_id}/')
+	return redirect('/lists/{}/'.format(list_id))
