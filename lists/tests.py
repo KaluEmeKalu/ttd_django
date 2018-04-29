@@ -60,7 +60,7 @@ class ListViewTest(TestCase):
 
     def test_uses_list_template(self):
         list_ = List.objects.create()
-        response = self.client.get(f'/lists/{list_.id}/')
+        response = self.client.get('/lists/{}/'.format(list_.id))
         self.assertTemplateUsed(response, 'lists/list.html')
 
 
@@ -76,7 +76,7 @@ class ListViewTest(TestCase):
         Item.objects.create(text='other list item 2', list=other_list)
 
 
-        response = self.client.get(f'/lists/{correct_list.id}/')
+        response = self.client.get('/lists/{}/'.format(correct_list.id))
 
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
@@ -87,7 +87,7 @@ class ListViewTest(TestCase):
     def test_passes_correct_list_to_template(self):
         other_list = List.objects.create()
         correct_list = List.objects.create()
-        response = self.client.get(f'/lists/{correct_list.id}/')
+        response = self.client.get('/lists/{}/'.format(correct_list.id))
 
         self.assertEqual(response.context['list'], correct_list)
 
@@ -99,7 +99,7 @@ class NewListTest(TestCase):
 
         # Code Smell: Post Test is too long?
         response = self.client.post(
-            f'/lists/{correct_list.id}/add_item', 
+            '/lists/{}/add_item'.format(correct_list.id), 
             data={'item_text': 'A new item for an existing list'})
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
@@ -109,11 +109,11 @@ class NewListTest(TestCase):
         other_list = List.objects.create()
         correct_list = List.objects.create()
         response = self.client.post(
-            f'/lists/{correct_list.id}/add_item', 
+            '/lists/{}/add_item'.format(correct_list.id), 
             data={
                 'item_text': 'A new item for an existing list'
         })
-        self.assertRedirects(response, f'/lists/{correct_list.id}/')
+        self.assertRedirects(response, '/lists/{}/'.format(correct_list.id))
 
 
 
