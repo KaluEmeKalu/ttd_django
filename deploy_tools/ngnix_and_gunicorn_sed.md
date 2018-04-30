@@ -34,3 +34,6 @@ echo $TAG # should show "DEPLOYED-" and then the timestamp
 git tag $TAG
 git push origin LIVE $TAG # pushes the tags up
 
+# How to Deploy With Fab Command
+
+fab deploy:host=kalu@superlists-staging.bigballerbook.com -u kalu
