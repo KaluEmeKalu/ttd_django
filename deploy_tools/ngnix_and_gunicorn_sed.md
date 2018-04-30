@@ -26,4 +26,11 @@ sudo systemctl reload nginx
 sudo systemctl enable gunicorn-superlists.bigballerbook.com
 sudo systemctl start gunicorn-superlists.bigballerbook.com
 
+# Git Tag
+
+git tag LIVE
+export TAG=$(date +DEPLOYED-%F/%H%M)  # this generates a timestamp
+echo $TAG # should show "DEPLOYED-" and then the timestamp
+git tag $TAG
+git push origin LIVE $TAG # pushes the tags up
 
